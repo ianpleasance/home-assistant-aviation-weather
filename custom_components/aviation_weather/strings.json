@@ -43,8 +43,8 @@
   },
   "services": {
     "refresh": {
-      "name": "Refresh METAR data",
-      "description": "Force an immediate refresh of METAR and TAF data for all configured aerodromes"
+      "name": "Refresh aviation weather data",
+      "description": "Force an immediate refresh of aviation weather data for all configured aerodromes"
     }
   }
 }
