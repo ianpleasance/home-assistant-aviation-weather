@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Add METAR Aerodrome",
+        "title": "Add Aerodrome",
         "description": "Enter an aerodrome ICAO code (e.g., EGLL, KJFK, YSSY)\n\nAerodromes already added: {aerodromes_added}",
         "data": {
           "aerodromes": "Aerodrome ICAO Code"
@@ -30,7 +30,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "METAR Options",
+        "title": "Aerodrome Options",
         "description": "Configured aerodromes: {aerodromes}\n\nNote: To add or remove aerodromes, you need to remove and re-add this integration.",
         "data": {
           "scan_interval": "Update interval (minutes)"
