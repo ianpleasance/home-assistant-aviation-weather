@@ -1,0 +1,46 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Flugwetter konfigurieren",
+        "description": "Fügen Sie Flugplätze hinzu, um METAR- und TAF-Wetterdaten zu überwachen.",
+        "data": {
+          "aerodromes": "Flugplatz-ICAO-Codes (durch Kommas getrennt)"
+        }
+      },
+      "scan_interval": {
+        "title": "Aktualisierungsintervall",
+        "description": "Wie oft sollen Wetterdaten abgerufen werden.",
+        "data": {
+          "scan_interval": "Aktualisierungsintervall (Minuten)"
+        }
+      }
+    },
+    "error": {
+      "invalid_aerodrome": "Ungültiger ICAO-Code. Verwenden Sie 4-stellige Codes (z.B. EDDF, EDDM).",
+      "cannot_connect": "Verbindung zum Flugwetterdienst nicht möglich.",
+      "unknown": "Unerwarteter Fehler"
+    },
+    "abort": {
+      "already_configured": "Dieser Flugplatz ist bereits konfiguriert"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Flugwetter-Optionen",
+        "description": "Flugplätze und Aktualisierungsintervall verwalten.",
+        "data": {
+          "aerodromes": "Flugplatz-ICAO-Codes (durch Kommas getrennt)",
+          "scan_interval": "Aktualisierungsintervall (Minuten)"
+        }
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Flugwetterdaten aktualisieren",
+      "description": "Sofortige Aktualisierung der Flugwetterdaten für alle konfigurierten Flugplätze erzwingen"
+    }
+  }
+}

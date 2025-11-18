@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add METAR Aerodrome",
+        "description": "Enter an aerodrome ICAO code (e.g., EGLL, KJFK, YSSY)\n\nAerodromes already added: {aerodromes_added}",
+        "data": {
+          "aerodromes": "Aerodrome ICAO Code"
+        }
+      },
+      "scan_interval": {
+        "title": "Configure Update Interval",
+        "description": "Aerodromes configured: {aerodromes}\n\nSet how often to fetch weather data (in minutes).",
+        "data": {
+          "scan_interval": "Update interval (minutes)",
+          "action": "Next action"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to Aviation Weather Center or aerodrome code not found",
+      "invalid_aerodrome_format": "Aerodrome code must be 3-5 characters",
+      "invalid_scan_interval": "Scan interval must be between 1 and 1440 minutes (24 hours)",
+      "unknown": "Unexpected error occurred"
+    },
+    "abort": {
+      "already_configured": "This aerodrome is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "METAR Options",
+        "description": "Configured aerodromes: {aerodromes}\n\nNote: To add or remove aerodromes, you need to remove and re-add this integration.",
+        "data": {
+          "scan_interval": "Update interval (minutes)"
+        }
+      }
+    },
+    "error": {
+      "invalid_scan_interval": "Scan interval must be between 1 and 1440 minutes (24 hours)"
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Refresh METAR data",
+      "description": "Force an immediate refresh of METAR and TAF data for all configured aerodromes"
+    }
+  }
+}

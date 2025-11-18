@@ -1,0 +1,46 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configura Meteo Aviazione",
+        "description": "Aggiungi aeroporti per monitorare i dati meteo METAR e TAF.",
+        "data": {
+          "aerodromes": "Codici ICAO degli aeroporti (separati da virgole)"
+        }
+      },
+      "scan_interval": {
+        "title": "Intervallo di aggiornamento",
+        "description": "Quanto spesso recuperare i dati meteorologici.",
+        "data": {
+          "scan_interval": "Intervallo di aggiornamento (minuti)"
+        }
+      }
+    },
+    "error": {
+      "invalid_aerodrome": "Codice ICAO non valido. Utilizzare codici a 4 lettere (es. LIRF, LIMC).",
+      "cannot_connect": "Impossibile connettersi al servizio meteo aviazione.",
+      "unknown": "Errore imprevisto"
+    },
+    "abort": {
+      "already_configured": "Questo aeroporto è già configurato"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opzioni Meteo Aviazione",
+        "description": "Gestisci aeroporti e intervallo di aggiornamento.",
+        "data": {
+          "aerodromes": "Codici ICAO degli aeroporti (separati da virgole)",
+          "scan_interval": "Intervallo di aggiornamento (minuti)"
+        }
+      }
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Aggiorna dati meteo aviazione",
+      "description": "Forza un aggiornamento immediato dei dati meteo aviazione per tutti gli aeroporti configurati"
+    }
+  }
+}

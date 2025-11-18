@@ -1,0 +1,12 @@
+{
+  "domain": "aviation_weather",
+  "name": "Aviation Weather",
+  "documentation": "https://github.com/ianpleasance/aviation-weather-integration",
+  "issue_tracker": "https://github.com/ianpleasance/aviation-weather-integration/issues",
+  "dependencies": [],
+  "codeowners": ["@ianpleasance"],
+  "requirements": ["aiohttp>=3.9.0"],
+  "config_flow": true,
+  "iot_class": "cloud_polling",
+  "version": "2.0.0"
+}

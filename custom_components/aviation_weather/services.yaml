@@ -1,0 +1,3 @@
+refresh:
+  name: Refresh aviation weather data
+  description: Force an immediate refresh of aviation weather data for all configured aerodromes
