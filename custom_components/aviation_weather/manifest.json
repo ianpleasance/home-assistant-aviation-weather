@@ -1,6 +1,6 @@
 {
   "domain": "aviation_weather",
-  "name": "Aviation Weather",
+  "name": "Aviation Weather data",
   "documentation": "https://github.com/ianpleasance/aviation-weather-integration",
   "issue_tracker": "https://github.com/ianpleasance/aviation-weather-integration/issues",
   "dependencies": [],
