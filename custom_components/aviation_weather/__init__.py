@@ -14,6 +14,9 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 import homeassistant.helpers.config_validation as cv
 
+from .metar_parser import parse_metar, format_metar
+from .taf_parser import parse_taf, format_taf
+
 _LOGGER = logging.getLogger(__name__)
 
 DOMAIN = "aviation_weather"
@@ -143,7 +146,69 @@ class AviationWeatherDataUpdateCoordinator(DataUpdateCoordinator):
                     return None
 
                 _LOGGER.debug("Successfully fetched aviation weather data for %s", aerodrome)
-                return json_data[0]
+                data = json_data[0]
+                
+                # Parse METAR if available
+                if "rawOb" in data and data["rawOb"]:
+                    try:
+                        parsed_metar = parse_metar(data["rawOb"])
+                        data["parsed_metar"] = parsed_metar
+                        _LOGGER.debug("Successfully parsed METAR for %s", aerodrome)
+                        
+                        # Try to format the METAR
+                        try:
+                            formatted_text = format_metar(parsed_metar, is_html=False)
+                            formatted_html = format_metar(parsed_metar, is_html=True)
+                            data["formatted_metar_text"] = formatted_text
+                            data["formatted_metar_html"] = formatted_html
+                            _LOGGER.debug("Successfully formatted METAR for %s", aerodrome)
+                        except Exception as format_err:
+                            _LOGGER.warning(
+                                "Failed to format METAR for %s: %s",
+                                aerodrome,
+                                format_err,
+                            )
+                            data["parsed_metar"]["_format_error"] = True
+                            
+                    except Exception as parse_err:
+                        _LOGGER.warning(
+                            "Failed to parse METAR for %s: %s",
+                            aerodrome,
+                            parse_err,
+                        )
+                        # Don't fail the entire fetch if parsing fails
+                
+                # Parse TAF if available
+                if "rawTaf" in data and data["rawTaf"]:
+                    try:
+                        parsed_taf = parse_taf(data["rawTaf"])
+                        data["parsed_taf"] = parsed_taf
+                        _LOGGER.debug("Successfully parsed TAF for %s", aerodrome)
+                        
+                        # Try to format the TAF
+                        try:
+                            formatted_text = format_taf(parsed_taf, is_html=False)
+                            formatted_html = format_taf(parsed_taf, is_html=True)
+                            data["formatted_taf_text"] = formatted_text
+                            data["formatted_taf_html"] = formatted_html
+                            _LOGGER.debug("Successfully formatted TAF for %s", aerodrome)
+                        except Exception as format_err:
+                            _LOGGER.warning(
+                                "Failed to format TAF for %s: %s",
+                                aerodrome,
+                                format_err,
+                            )
+                            data["parsed_taf"]["_format_error"] = True
+                            
+                    except Exception as parse_err:
+                        _LOGGER.warning(
+                            "Failed to parse TAF for %s: %s",
+                            aerodrome,
+                            parse_err,
+                        )
+                        # Don't fail the entire fetch if parsing fails
+                
+                return data
 
         except aiohttp.ClientError as err:
             _LOGGER.error("Client error fetching aviation weather data for %s: %s", aerodrome, err)
