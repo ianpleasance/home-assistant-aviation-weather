@@ -187,8 +187,8 @@ class AviationWeatherDataUpdateCoordinator(DataUpdateCoordinator):
                         
                         # Try to format the TAF
                         try:
-                            formatted_text = format_taf(parsed_taf, is_html=False)
-                            formatted_html = format_taf(parsed_taf, is_html=True)
+                            formatted_text = format_taf(parsed_taf, eol="<br>")
+                            formatted_html = format_taf(parsed_taf, eol="\n")
                             data["formatted_taf_text"] = formatted_text
                             data["formatted_taf_html"] = formatted_html
                             _LOGGER.debug("Successfully formatted TAF for %s", aerodrome)

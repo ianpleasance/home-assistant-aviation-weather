@@ -34,7 +34,7 @@ Usage:
     parsed_data = parse_metar(metar_string)
     formatted_text = format_metar(parsed_data)
 
-Author: ianpleasance
+Author: Ian @ Planet Builders
 Email: ian@planetbuilders.co.uk
 Version: 2.0.0
 License: MIT
@@ -216,17 +216,53 @@ def parse_metar(metar: str) -> Dict[str, Any]:
                 else:
                     parsed['visibility'] = f"{visibility} meters"
         
+        # Find where TREND or RMK section starts to avoid parsing data from those sections
+        # We need to parse weather and clouds only from the observation body, not from TREND/RMK
+        trend_start = len(metar)
+        for keyword in ['NOSIG', 'TEMPO', 'BECMG', 'RMK']:
+            match = re.search(rf'\b{keyword}\b', metar)
+            if match:
+                trend_start = min(trend_start, match.start())
+        
+        # Extract body section (everything before TREND/RMK)
+        metar_body = metar[:trend_start]
+        
         # Sky Clear
-        sky_clear_match = re.search(r'\b(SKC|CLR)\b', metar)
+        sky_clear_match = re.search(r'\b(SKC|CLR)\b', metar_body)
         if sky_clear_match:
             parsed['sky_clear'] = True
             parsed['sky_clear_type'] = sky_clear_match.group(1)
         
-        # Weather phenomena
+        # Weather phenomena - search only in correct section (after visibility, before clouds/temp)
         if not parsed.get('cavok'):
+            # Find the section where weather should be (after visibility, before clouds or temperature)
+            weather_search_start = 0
+            weather_search_end = len(metar_body)
+            
+            # Start after visibility if found
+            vis_match = re.search(r'\b\d{4}\b|CAVOK|P6SM|\d+SM', metar_body)
+            if vis_match:
+                weather_search_start = vis_match.end()
+            elif parsed.get('wind'):
+                # If no visibility, start after wind
+                wind_match = re.search(r'\b\d{3}(\d{2,3})(G\d{2,3})?(KT|MPS|KMH)\b', metar_body)
+                if wind_match:
+                    weather_search_start = wind_match.end()
+            
+            # End before temperature or clouds
+            temp_match = re.search(r'\bM?\d{2}/M?\d{2}\b', metar_body[weather_search_start:])
+            if temp_match:
+                weather_search_end = weather_search_start + temp_match.start()
+            
+            cloud_match = re.search(r'\b(FEW|SCT|BKN|OVC|NSC|SKC)\b', metar_body[weather_search_start:])
+            if cloud_match:
+                weather_search_end = min(weather_search_end, weather_search_start + cloud_match.start())
+            
+            weather_section = metar_body[weather_search_start:weather_search_end]
+            
             weather_match = re.findall(
                 r'(-|\+|VC)?(MI|BC|DR|BL|SH|TS|FZ)?(DZ|RA|SN|SG|IC|PL|GR|GS|UP|BR|FG|FU|VA|DU|SA|HZ|PY|SQ|FC|SS|DS)',
-                metar
+                weather_section
             )
             if weather_match:
                 parsed['weather'] = [
@@ -238,9 +274,9 @@ def parse_metar(metar: str) -> Dict[str, Any]:
                     for match in weather_match
                 ]
         
-        # Cloud layers
+        # Cloud layers - search only in body section
         if not parsed.get('cavok') and not parsed.get('sky_clear'):
-            cloud_matches = re.findall(r'\b(FEW|SCT|BKN|OVC|VV|NSC)(\d{3}|///)?\b', metar)
+            cloud_matches = re.findall(r'\b(FEW|SCT|BKN|OVC|VV|NSC)(\d{3}|///)?\b', metar_body)
             if cloud_matches:
                 parsed['clouds'] = []
                 for cloud in cloud_matches:

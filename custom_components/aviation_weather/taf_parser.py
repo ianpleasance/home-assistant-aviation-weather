@@ -11,7 +11,7 @@ Usage:
     parsed_data = parse_taf(taf_string)
     formatted_text = format_taf(parsed_data)
 
-Author: ianpleasance
+Author: Ian @ Planet Builders
 Version: 2.0.0
 """
 
@@ -107,9 +107,30 @@ def _parse_forecast_group(group_text: str, group_type: str = "BASE") -> Dict[str
             forecast['visibility'] = f"{visibility} meters"
     
     # Weather phenomena
+    # Search only in the section after visibility and before clouds to avoid false matches in keywords
+    weather_search_start = 0
+    weather_search_end = len(group_text)
+    
+    # Start after visibility if found
+    vis_match = re.search(r'\b(CAVOK|P6SM|\d{4}|(\d+ )?\d+/\d+SM|\d+SM)\b', group_text)
+    if vis_match:
+        weather_search_start = vis_match.end()
+    elif forecast.get('wind'):
+        # If no visibility found, start after wind
+        wind_match = re.search(r'\b(\d{3}|VRB)\d{2,3}(G\d{2,3})?(KT|MPS|KMH)\b', group_text)
+        if wind_match:
+            weather_search_start = wind_match.end()
+    
+    # End before clouds
+    cloud_match = re.search(r'\b(FEW|SCT|BKN|OVC|VV|NSC|SKC)\b', group_text[weather_search_start:])
+    if cloud_match:
+        weather_search_end = weather_search_start + cloud_match.start()
+    
+    weather_section = group_text[weather_search_start:weather_search_end]
+    
     weather_match = re.findall(
         r'(-|\+|VC)?(MI|BC|DR|BL|SH|TS|FZ)?(DZ|RA|SN|SG|IC|PL|GR|GS|UP|BR|FG|FU|VA|DU|SA|HZ|PY|SQ|FC|SS|DS)',
-        group_text
+        weather_section
     )
     if weather_match:
         forecast['weather'] = [
@@ -286,35 +307,39 @@ def parse_taf(taf: str) -> Dict[str, Any]:
             parsed['forecast_changes'] = []
             
             # Find all change groups
-            # Handle PROB followed by TEMPO
-            prob_tempo_pattern = r'(PROB(?:30|40)\s+TEMPO\s+\d{4}/\d{4}\s+[^\n]+?)(?=\s+(?:TEMPO|BECMG|PROB(?:30|40)|FM\d{6})|$)'
-            prob_tempo_matches = list(re.finditer(prob_tempo_pattern, changes_text))
+            # Pattern to match all change group types including combined PROB TEMPO
+            # Use negative lookahead to prevent matching PROB when it's part of PROB TEMPO
+            change_pattern = r'(PROB(?:30|40)\s+TEMPO\s+\d{4}/\d{4}|(?:TEMPO|BECMG)\s+\d{4}/\d{4}|PROB(?:30|40)\s+\d{4}/\d{4}|FM\d{6})'
             
-            # Find all other change groups
-            other_pattern = r'((?:TEMPO|BECMG|PROB(?:30|40)(?!\s+TEMPO)|FM\d{6})\s+[^\n]+?)(?=\s+(?:TEMPO|BECMG|PROB(?:30|40)|FM\d{6})|$)'
-            other_matches = list(re.finditer(other_pattern, changes_text))
+            # Find all matches
+            change_matches = list(re.finditer(change_pattern, changes_text))
             
-            # Combine and sort by position
-            all_matches = prob_tempo_matches + other_matches
-            all_matches.sort(key=lambda x: x.start())
-            
-            for match in all_matches:
-                group_text = match.group(1).strip()
+            # Extract groups with their text up to the next group
+            for i, match in enumerate(change_matches):
+                start = match.start()
+                # Find where this group ends (start of next group or end of text)
+                if i + 1 < len(change_matches):
+                    end = change_matches[i + 1].start()
+                else:
+                    end = len(changes_text)
                 
-                # Determine group type
-                if group_text.startswith('PROB30 TEMPO'):
+                group_text = changes_text[start:end].strip()
+                
+                # Determine group type from the matched pattern
+                matched_pattern = match.group(0)
+                if matched_pattern.startswith('PROB30 TEMPO'):
                     group_type = "PROB30 TEMPO"
-                elif group_text.startswith('PROB40 TEMPO'):
+                elif matched_pattern.startswith('PROB40 TEMPO'):
                     group_type = "PROB40 TEMPO"
-                elif group_text.startswith('PROB30'):
+                elif matched_pattern.startswith('PROB30'):
                     group_type = "PROB30"
-                elif group_text.startswith('PROB40'):
+                elif matched_pattern.startswith('PROB40'):
                     group_type = "PROB40"
-                elif group_text.startswith('TEMPO'):
+                elif matched_pattern.startswith('TEMPO'):
                     group_type = "TEMPO"
-                elif group_text.startswith('BECMG'):
+                elif matched_pattern.startswith('BECMG'):
                     group_type = "BECMG"
-                elif group_text.startswith('FM'):
+                elif matched_pattern.startswith('FM'):
                     group_type = "FM"
                 else:
                     continue
