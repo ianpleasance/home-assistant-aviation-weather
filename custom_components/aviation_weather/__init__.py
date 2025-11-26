@@ -157,10 +157,12 @@ class AviationWeatherDataUpdateCoordinator(DataUpdateCoordinator):
                         
                         # Try to format the METAR
                         try:
-                            formatted_text = format_metar(parsed_metar, is_html=False)
-                            formatted_html = format_metar(parsed_metar, is_html=True)
+                            formatted_text = format_metar(parsed_metar, eol="\n", is_html=False)
+                            formatted_html = format_metar(parsed_metar, eol="<br>", is_html=False)
+                            formatted_html_rich = format_metar(parsed_metar, eol="<br>", is_html=True)
                             data["formatted_metar_text"] = formatted_text
                             data["formatted_metar_html"] = formatted_html
+                            data["formatted_metar_html_rich"] = formatted_html_rich
                             _LOGGER.debug("Successfully formatted METAR for %s", aerodrome)
                         except Exception as format_err:
                             _LOGGER.warning(
@@ -187,10 +189,12 @@ class AviationWeatherDataUpdateCoordinator(DataUpdateCoordinator):
                         
                         # Try to format the TAF
                         try:
-                            formatted_text = format_taf(parsed_taf, eol="<br>")
-                            formatted_html = format_taf(parsed_taf, eol="\n")
+                            formatted_text = format_taf(parsed_taf, eol="<br>", is_html=False)
+                            formatted_html = format_taf(parsed_taf, eol="\n", is_html=False)
+                            formatted_html_rich = format_taf(parsed_taf, eol="\n", is_html=True)
                             data["formatted_taf_text"] = formatted_text
                             data["formatted_taf_html"] = formatted_html
+                            data["formatted_taf_html_rich"] = formatted_html_rich
                             _LOGGER.debug("Successfully formatted TAF for %s", aerodrome)
                         except Exception as format_err:
                             _LOGGER.warning(

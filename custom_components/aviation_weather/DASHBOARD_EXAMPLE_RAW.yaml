@@ -1,0 +1,40 @@
+views:
+  - title: Raw Data
+    path: raw-data
+    icon: mdi:code-braces
+    cards:
+      - type: markdown
+        title: Raw METAR Reports
+        content: |
+          ## Southend (EGMC)
+          ```
+          {{ state_attr('sensor.egmc_metar_raw_metar', 'full_text') }}
+          ```
+
+          ## Heathrow (EGLL)
+          ```
+          {{ state_attr('sensor.egll_metar_raw_metar', 'full_text') }}
+          ```
+
+          ## Norwich (EGSH)
+          ```
+          {{ state_attr('sensor.egsh_metar_raw_metar', 'full_text') }}
+          ```
+      - type: markdown
+        title: Raw TAF Forecasts
+        content: |
+          ## Southend (EGMC)
+          ```
+          {{ state_attr('sensor.egmc_taf_raw_taf', 'full_text') }}
+          ```
+
+          ## Heathrow (EGLL)
+          ```
+          {{ state_attr('sensor.egll_taf_raw_taf', 'full_text') }}
+          ```
+
+          ## Norwich (EGSH)
+          ```
+          {{ state_attr('sensor.egsh_taf_raw_taf', 'full_text') }}
+          ```
+

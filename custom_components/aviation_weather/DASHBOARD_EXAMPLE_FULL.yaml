@@ -1,0 +1,243 @@
+title: Aviation Weather
+views:
+  - title: Weather Reports
+    path: weather-reports
+    icon: mdi:airplane
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >
+              # 🛬 {{ states('sensor.egmc_aerodrome_name_2') }} ({{
+              states('sensor.egmc_metar_icao_code_2') }})
+
+
+              **Location:** {{ states('sensor.egmc_latitude') | float | abs
+              }}°{{ 'N' if states('sensor.egmc_latitude') | float >= 0 else 'S'
+              }}, {{ states('sensor.egmc_longitude') | float | abs }}°{{ 'E' if
+              states('sensor.egmc_longitude') | float >= 0 else 'W' }}
+
+              **Elevation:** {{ states('sensor.egmc_elevation') }}m
+          - type: entities
+            title: Current Conditions
+            entities:
+              - entity: sensor.egmc_metar_temperature
+                name: Temperature
+                icon: mdi:thermometer
+              - entity: sensor.egmc_metar_dew_point
+                name: Dew Point
+                icon: mdi:water-percent
+              - entity: sensor.egmc_metar_wind_speed
+                name: Wind Speed
+                icon: mdi:weather-windy
+              - entity: sensor.egmc_metar_wind_direction
+                name: Wind Direction
+                icon: mdi:compass
+              - entity: sensor.egmc_metar_wind_gust
+                name: Wind Gust
+                icon: mdi:weather-windy-variant
+              - entity: sensor.egmc_metar_visibility
+                name: Visibility
+                icon: mdi:eye
+              - entity: sensor.egmc_metar_altimeter
+                name: Altimeter
+                icon: mdi:gauge
+              - entity: sensor.egmc_metar_report_time_2
+                name: Report Time
+                icon: mdi:clock
+          - type: markdown
+            title: METAR Report
+            content: >
+              {{ state_attr('sensor.egmc_metar_readable_html',
+              'formatted_output') }}
+          - type: markdown
+            title: TAF Forecast
+            content: >
+              {{ state_attr('sensor.egmc_taf_readable_html', 'formatted_output')
+              }}
+          - type: markdown
+            title: METAR Report (Rich)
+            content: >
+              {{ state_attr('sensor.egmc_metar_readable_rich_html',
+              'formatted_output') }}
+          - type: markdown
+            title: TAF Forecast (Rich)
+            content: >
+              {{ state_attr('sensor.egmc_taf_readable_rich_html',
+              'formatted_output') }}
+          - type: markdown
+            title: METAR Report (Text)
+            content: >
+              {{ state_attr('sensor.egmc_metar_readable_text',
+              'formatted_output') }}
+          - type: markdown
+            title: TAF Forecast (Text)
+            content: >
+              {{ state_attr('sensor.egmc_taf_readable_text', 'formatted_output')
+              }}
+          - type: markdown
+            content: >
+              **Raw METAR:** `{{ state_attr('sensor.egmc_metar_raw_metar',
+              'full_text') }}`
+
+
+              **Raw TAF:** `{{ state_attr('sensor.egmc_taf_raw_taf',
+              'full_text') }}`
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >
+              # 🛬 {{ states('sensor.egll_aerodrome_name_2') }} ({{
+              states('sensor.egll_metar_icao_code_2') }})
+
+
+              **Location:** {{ states('sensor.egll_latitude') | float | abs
+              }}°{{ 'N' if states('sensor.egll_latitude') | float >= 0 else 'S'
+              }}, {{ states('sensor.egll_longitude') | float | abs }}°{{ 'E' if
+              states('sensor.egll_longitude') | float >= 0 else 'W' }} 
+
+              **Elevation:** {{ states('sensor.egll_elevation') }}m
+          - type: entities
+            title: Current Conditions
+            entities:
+              - entity: sensor.egll_metar_temperature
+                name: Temperature
+                icon: mdi:thermometer
+              - entity: sensor.egll_metar_dew_point
+                name: Dew Point
+                icon: mdi:water-percent
+              - entity: sensor.egll_metar_wind_speed
+                name: Wind Speed
+                icon: mdi:weather-windy
+              - entity: sensor.egll_metar_wind_direction
+                name: Wind Direction
+                icon: mdi:compass
+              - entity: sensor.egll_metar_wind_gust
+                name: Wind Gust
+                icon: mdi:weather-windy-variant
+              - entity: sensor.egll_metar_visibility
+                name: Visibility
+                icon: mdi:eye
+              - entity: sensor.egll_metar_altimeter
+                name: Altimeter
+                icon: mdi:gauge
+              - entity: sensor.egll_metar_report_time_2
+                name: Report Time
+                icon: mdi:clock
+          - type: markdown
+            title: METAR Report
+            content: >
+              {{ state_attr('sensor.egll_metar_readable_html',
+              'formatted_output') }}
+          - type: markdown
+            title: TAF Forecast
+            content: >
+              {{ state_attr('sensor.egll_taf_readable_html', 'formatted_output')
+              }}
+          - type: markdown
+            title: METAR Report (Rich)
+            content: >
+              {{ state_attr('sensor.egll_metar_readable_rich_html',
+              'formatted_output') }}
+          - type: markdown
+            title: TAF Forecast (Rich)
+            content: >
+              {{ state_attr('sensor.egll_taf_readable_rich_html',
+              'formatted_output') }}
+          - type: markdown
+            title: METAR Report (Text)
+            content: >
+              {{ state_attr('sensor.egll_metar_readable_text',
+              'formatted_output') }}
+          - type: markdown
+            title: TAF Forecast (Text)
+            content: >
+              {{ state_attr('sensor.egll_taf_readable_text', 'formatted_output')
+              }}
+          - type: markdown
+            content: >
+              **Raw METAR:** `{{ state_attr('sensor.egll_metar_raw_metar',
+              'full_text') }}`
+
+
+              **Raw TAF:** `{{ state_attr('sensor.egll_taf_raw_taf',
+              'full_text') }}`
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >
+              # 🛬 {{ states('sensor.egsh_aerodrome_name_2') }} ({{
+              states('sensor.egsh_metar_icao_code_2') }})
+
+
+              **Location:** {{ states('sensor.egsh_latitude') | float | abs
+              }}°{{ 'N' if states('sensor.egsh_latitude') | float >= 0 else 'S'
+              }}, {{ states('sensor.egsh_longitude') | float | abs }}°{{ 'E' if
+              states('sensor.egsh_longitude') | float >= 0 else 'W' }} 
+
+              **Elevation:** {{ states('sensor.egsh_elevation') }}m
+          - type: entities
+            title: Current Conditions
+            entities:
+              - entity: sensor.egsh_metar_temperature
+                name: Temperature
+                icon: mdi:thermometer
+              - entity: sensor.egsh_metar_dew_point
+                name: Dew Point
+                icon: mdi:water-percent
+              - entity: sensor.egsh_metar_wind_speed
+                name: Wind Speed
+                icon: mdi:weather-windy
+              - entity: sensor.egsh_metar_wind_direction
+                name: Wind Direction
+                icon: mdi:compass
+              - entity: sensor.egsh_metar_wind_gust
+                name: Wind Gust
+                icon: mdi:weather-windy-variant
+              - entity: sensor.egsh_metar_visibility
+                name: Visibility
+                icon: mdi:eye
+              - entity: sensor.egsh_metar_altimeter
+                name: Altimeter
+                icon: mdi:gauge
+              - entity: sensor.egsh_metar_report_time_2
+                name: Report Time
+                icon: mdi:clock
+          - type: markdown
+            title: METAR Report
+            content: >
+              {{ state_attr('sensor.egsh_metar_readable_html',
+              'formatted_output') }}
+          - type: markdown
+            title: TAF Forecast
+            content: >
+              {{ state_attr('sensor.egsh_taf_readable_text', 'formatted_output')
+              }}
+          - type: markdown
+            title: METAR Report (Rich)
+            content: >
+              {{ state_attr('sensor.egsh_metar_readable_rich_html',
+              'formatted_output') }}
+          - type: markdown
+            title: TAF Forecast (Rich)
+            content: >
+              {{ state_attr('sensor.egsh_taf_readable_rich_html',
+              'formatted_output') }}
+          - type: markdown
+            title: METAR Report (Text)
+            content: >
+              {{ state_attr('sensor.egsh_metar_readable_text',
+              'formatted_output') }}
+          - type: markdown
+            title: TAF Forecast (Text)
+            content: >
+              {{ state_attr('sensor.egsh_taf_readable_text', 'formatted_output')
+              }}
+          - type: markdown
+            content: >
+              **Raw METAR:** `{{ state_attr('sensor.egsh_metar_raw_metar',
+              'full_text') }}`
+
+
+              **Raw TAF:** `{{ state_attr('sensor.egsh_taf_raw_taf',
+              'full_text') }}`

@@ -351,6 +351,12 @@ FORMATTED_SENSORS = {
         "unit": None,
         "data_type": "metar_formatted",
     },
+    "metar_readable_html_rich": {
+        "name": "METAR Readable (Rich HTML)",
+        "icon": "mdi:language-html5",
+        "unit": None,
+        "data_type": "metar_formatted",
+    },
     "taf_readable_text": {
         "name": "TAF Readable (Text)",
         "icon": "mdi:text-box-multiple",
@@ -359,6 +365,12 @@ FORMATTED_SENSORS = {
     },
     "taf_readable_html": {
         "name": "TAF Readable (HTML)",
+        "icon": "mdi:language-html5",
+        "unit": None,
+        "data_type": "taf_formatted",
+    },
+    "taf_readable_html_rich": {
+        "name": "TAF Readable (Rich HTML)",
         "icon": "mdi:language-html5",
         "unit": None,
         "data_type": "taf_formatted",
@@ -515,6 +527,10 @@ class AviationWeatherSensor(CoordinatorEntity, SensorEntity):
         # Get value from API data first
         value = aerodrome_data.get(source_field)
         
+        # Special handling for rawTaf - ensure we get it even if it's not in the expected format
+        if value is None and self._sensor_key == "rawTaf" and "rawTaf" in aerodrome_data:
+            value = aerodrome_data["rawTaf"]
+        
         # If value is missing and we have parsed METAR data, try to fill from parsed data
         if value is None and "parsed_metar" in aerodrome_data:
             parsed_metar = aerodrome_data["parsed_metar"]
@@ -554,6 +570,14 @@ class AviationWeatherSensor(CoordinatorEntity, SensorEntity):
                 return parts[1].strip() if len(parts) > 1 else None
             return None
         
+        # Truncate rawOb and rawTaf to avoid 255 character limit
+        # Full text will be available in attributes
+        if self._sensor_key in ["rawOb", "rawTaf"]:
+            if value and len(value) > 250:
+                return value[:250] + "..."
+            elif value:
+                return value
+        
         return value
 
     @property
@@ -574,6 +598,18 @@ class AviationWeatherSensor(CoordinatorEntity, SensorEntity):
         # Add raw METAR to all sensors for reference
         if "rawOb" in aerodrome_data:
             attributes["raw_metar"] = aerodrome_data["rawOb"]
+        
+        # If this is a rawOb or rawTaf sensor, add the full text as an attribute
+        if self._sensor_key == "rawOb" and "rawOb" in aerodrome_data:
+            full_text = aerodrome_data["rawOb"]
+            attributes["full_text"] = full_text
+            attributes["text_length"] = len(full_text)
+            attributes["is_truncated"] = len(full_text) > 250
+        elif self._sensor_key == "rawTaf" and "rawTaf" in aerodrome_data:
+            full_text = aerodrome_data["rawTaf"]
+            attributes["full_text"] = full_text
+            attributes["text_length"] = len(full_text)
+            attributes["is_truncated"] = len(full_text) > 250
         
         return attributes
 
@@ -860,7 +896,9 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
                 return "Format failed"
             
             # Get pre-formatted data from coordinator
-            if "html" in self._sensor_key:
+            if "html_rich" in self._sensor_key:
+                formatted = aerodrome_data.get("formatted_metar_html_rich")
+            elif "html" in self._sensor_key:
                 formatted = aerodrome_data.get("formatted_metar_html")
             else:
                 formatted = aerodrome_data.get("formatted_metar_text")
@@ -871,10 +909,12 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
             else:
                 # Fallback: format now
                 try:
-                    if "html" in self._sensor_key:
-                        result = format_metar(parsed_metar, eol="<br>")
+                    if "html_rich" in self._sensor_key:
+                        result = format_metar(parsed_metar, eol="<br>", is_html=True)
+                    elif "html" in self._sensor_key:
+                        result = format_metar(parsed_metar, eol="<br>", is_html=False)
                     else:
-                        result = format_metar(parsed_metar, eol="\n")
+                        result = format_metar(parsed_metar, eol="\n", is_html=False)
                     return f"{len(result)} chars"
                 except Exception as err:
                     return "Format error"
@@ -890,8 +930,10 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
                 return "Format failed"
             
             # Get pre-formatted data from coordinator
-            if "html" in self._sensor_key:
-                formatted = aerodrome_data.get("formatted_taf_html")
+            if "html_rich" in self._sensor_key:
+                formatted = aerodrome_data.get("formatted_taf_html_rich") 
+            elif "html" in self._sensor_key:
+                formatted = aerodrome_data.get("formatted_taf_html") 
             else:
                 formatted = aerodrome_data.get("formatted_taf_text")
             
@@ -901,10 +943,12 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
             else:
                 # Fallback: format now
                 try:
-                    if "html" in self._sensor_key:
-                        result = format_taf(parsed_taf, eol="<br>")
+                    if "html_rich" in self._sensor_key:
+                        result = format_taf(parsed_taf, eol="<br>", is_html=True)
+                    elif "html" in self._sensor_key:
+                        result = format_taf(parsed_taf, eol="<br>", is_html=False)
                     else:
-                        result = format_taf(parsed_taf, eol="\n")
+                        result = format_taf(parsed_taf, eol="\n", is_html=False)
                     return f"{len(result)} chars"
                 except Exception as err:
                     return "Format error"
@@ -935,7 +979,9 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
                 attributes["parse_success"] = True
                 
                 # Add the full formatted text to attributes
-                if "html" in self._sensor_key:
+                if "html_rich" in self._sensor_key:
+                    formatted = aerodrome_data.get("formatted_metar_html_rich")
+                elif "html" in self._sensor_key:
                     formatted = aerodrome_data.get("formatted_metar_html")
                 else:
                     formatted = aerodrome_data.get("formatted_metar_text")
@@ -946,10 +992,12 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
                     # Fallback
                     try:
                         parsed_metar = aerodrome_data["parsed_metar"]
-                        if "html" in self._sensor_key:
-                            formatted = format_metar(parsed_metar, eol="<br>")
+                        if "html_rich" in self._sensor_key:
+                            formatted = format_metar(parsed_metar, eol="<br>", is_html=True)
+                        elif "html" in self._sensor_key:
+                            formatted = format_metar(parsed_metar, eol="<br>", is_html=False)
                         else:
-                            formatted = format_metar(parsed_metar, eol="\n")
+                            formatted = format_metar(parsed_metar, eol="\n", is_html=False)
                         attributes["formatted_output"] = formatted
                     except Exception as err:
                         attributes["formatted_output"] = f"Error: {err}"
@@ -963,7 +1011,9 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
                 attributes["parse_success"] = True
                 
                 # Add the full formatted text to attributes
-                if "html" in self._sensor_key:
+                if "html_rich" in self._sensor_key:
+                    formatted = aerodrome_data.get("formatted_taf_html_rich")
+                elif "html" in self._sensor_key:
                     formatted = aerodrome_data.get("formatted_taf_html")
                 else:
                     formatted = aerodrome_data.get("formatted_taf_text")
@@ -974,10 +1024,12 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
                     # Fallback
                     try:
                         parsed_taf = aerodrome_data["parsed_taf"]
-                        if "html" in self._sensor_key:
-                            formatted = format_taf(parsed_taf, eol="<br>")
+                        if "html_rich" in self._sensor_key:
+                            formatted = format_taf(parsed_taf, eol="<br>", is_html=True)
+                        elif "html" in self._sensor_key:
+                            formatted = format_taf(parsed_taf, eol="<br>", is_html=False)
                         else:
-                            formatted = format_taf(parsed_taf, eol="\n")
+                            formatted = format_taf(parsed_taf, eol="\n", is_html=False)
                         attributes["formatted_output"] = formatted
                     except Exception as err:
                         attributes["formatted_output"] = f"Error: {err}"
