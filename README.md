@@ -1,10 +1,10 @@
-# Aviation Weather Integration v2.3.0
+# Aviation Weather Integration v2.6.0
 
 **Global-ready dashboard with automatic hemisphere detection! 🌍**
 
 ---
 
-## 🎯 What's New in v2.3.0
+## 🎯 What's New in v2.6.0
 
 ### Dashboard Now Works Worldwide
 - ✅ **Automatic hemisphere detection** for coordinates
@@ -23,13 +23,13 @@
 
 ### Installation
 
-1. **Download**: [aviation_weather_v2.3.0.tar.gz](aviation_weather_v2.3.0.tar.gz)
+1. **Download**: [aviation_weather_v2.6.0.tar.gz](aviation_weather_v2.6.0.tar.gz)
 
 2. **Extract**:
    ```bash
    cd /config/custom_components
-   tar -xzf aviation_weather_v2.3.0.tar.gz
-   mv aviation_weather_v2.3/custom_components/aviation_weather .
+   tar -xzf aviation_weather_v2.6.0.tar.gz
+   mv aviation_weather_v2.6/custom_components/aviation_weather .
    ```
 
 3. **Restart Home Assistant**
