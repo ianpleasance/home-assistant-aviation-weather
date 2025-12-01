@@ -8,8 +8,8 @@ views:
         cards:
           - type: markdown
             content: >
-              # 🛬 {{ states('sensor.egmc_aerodrome_name_2') }} ({{
-              states('sensor.egmc_metar_icao_code_2') }})
+              # 🛬 {{ states('sensor.egmc_aerodrome_name') }} ({{
+              states('sensor.egmc_metar_icao_code') }})
 
 
               **Location:** {{ states('sensor.egmc_latitude') | float | abs
@@ -42,7 +42,7 @@ views:
               - entity: sensor.egmc_metar_altimeter
                 name: Altimeter
                 icon: mdi:gauge
-              - entity: sensor.egmc_metar_report_time_2
+              - entity: sensor.egmc_metar_report_time
                 name: Report Time
                 icon: mdi:clock
           - type: markdown
@@ -87,8 +87,8 @@ views:
         cards:
           - type: markdown
             content: >
-              # 🛬 {{ states('sensor.egll_aerodrome_name_2') }} ({{
-              states('sensor.egll_metar_icao_code_2') }})
+              # 🛬 {{ states('sensor.egll_aerodrome_name') }} ({{
+              states('sensor.egll_metar_icao_code') }})
 
 
               **Location:** {{ states('sensor.egll_latitude') | float | abs
@@ -121,7 +121,7 @@ views:
               - entity: sensor.egll_metar_altimeter
                 name: Altimeter
                 icon: mdi:gauge
-              - entity: sensor.egll_metar_report_time_2
+              - entity: sensor.egll_metar_report_time
                 name: Report Time
                 icon: mdi:clock
           - type: markdown
@@ -166,8 +166,8 @@ views:
         cards:
           - type: markdown
             content: >
-              # 🛬 {{ states('sensor.egsh_aerodrome_name_2') }} ({{
-              states('sensor.egsh_metar_icao_code_2') }})
+              # 🛬 {{ states('sensor.egsh_aerodrome_name') }} ({{
+              states('sensor.egsh_metar_icao_code') }})
 
 
               **Location:** {{ states('sensor.egsh_latitude') | float | abs
@@ -200,7 +200,7 @@ views:
               - entity: sensor.egsh_metar_altimeter
                 name: Altimeter
                 icon: mdi:gauge
-              - entity: sensor.egsh_metar_report_time_2
+              - entity: sensor.egsh_metar_report_time
                 name: Report Time
                 icon: mdi:clock
           - type: markdown
