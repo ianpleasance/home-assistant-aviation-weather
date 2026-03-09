@@ -1,290 +1,261 @@
-# Aviation Weather Integration v2.6.0
+# Aviation Weather Integration for Home Assistant
 
-**Global-ready dashboard with automatic hemisphere detection! 🌍**
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
+[![version](https://img.shields.io/badge/version-2.6.0-blue.svg)](https://github.com/ianpleasance/aviation-weather-integration)
 
----
-
-## 🎯 What's New in v2.6.0
-
-### Dashboard Now Works Worldwide
-- ✅ **Automatic hemisphere detection** for coordinates
-- ✅ **Correct N/S/E/W indicators** based on sign
-- ✅ **Works for any aerodrome globally** without modification
-
-**Example Displays:**
-- London (51.5°N, 0.5°W) ✅
-- Sydney (33.9°S, 151.2°E) ✅
-- New York (40.6°N, 73.8°W) ✅
-- Santiago (33.4°S, 70.8°W) ✅
+A custom Home Assistant integration that fetches live METAR and TAF data from the Aviation Weather Center (NOAA) for any aerodrome worldwide, creating 52+ sensors per aerodrome with parsed and formatted weather output.
 
 ---
 
-## 📦 Quick Start
+## Features
 
-### Installation
-
-1. **Download**: [aviation_weather_v2.6.0.tar.gz](aviation_weather_v2.6.0.tar.gz)
-
-2. **Extract**:
-   ```bash
-   cd /config/custom_components
-   tar -xzf aviation_weather_v2.6.0.tar.gz
-   mv aviation_weather_v2.6/custom_components/aviation_weather .
-   ```
-
-3. **Restart Home Assistant**
-
-4. **Add Integration**:
-   - Settings → Devices & Services
-   - Add Integration → "Aviation Weather"
-   - Enter aerodrome codes
-
-5. **Add Dashboard** (optional):
-   - Copy YAML from `DASHBOARD_EGMC_EGLL_EGSH.yaml`
-   - Settings → Dashboards → Add Dashboard
-   - Edit in YAML mode and paste
+- ✅ **52+ sensors per aerodrome** — raw, parsed METAR, parsed TAF, and formatted output
+- ✅ **Automatic METAR and TAF parsing** with human-readable formatted output (text and HTML)
+- ✅ **Global coverage** — any ICAO aerodrome code worldwide
+- ✅ **Automatic hemisphere detection** for correct N/S/E/W coordinate display
+- ✅ **Multi-aerodrome support** — monitor multiple aerodromes simultaneously
+- ✅ **Configurable update interval** (1–1440 minutes, default: 30)
+- ✅ **Runway flyability assessment** — crosswind/headwind calculations, VFR/IFR condition ratings
+- ✅ **Translated UI** in 13 languages (DA, DE, EN, ES, FI, FR, IT, JA, NL, NO, PL, PT, SV)
 
 ---
 
-## 🌍 Global Coverage
+## Installation
 
-Now supports aerodromes worldwide with correct coordinate display:
+### HACS (Recommended)
 
-### Europe
-- EGLL (London Heathrow)
-- LFPG (Paris Charles de Gaulle)
-- EDDF (Frankfurt)
-- LEMD (Madrid)
+1. Open HACS in your Home Assistant instance
+2. Click **Integrations**
+3. Click the three dots → **Custom repositories**
+4. Add: `https://github.com/ianpleasance/aviation-weather-integration`
+5. Category: **Integration**
+6. Search for **Aviation Weather** and click **Download**
+7. Restart Home Assistant
 
-### Americas
-- KJFK (New York JFK)
-- KLAX (Los Angeles)
-- SBGR (São Paulo)
-- SCEL (Santiago)
+### Manual
 
-### Asia/Pacific
-- RJTT (Tokyo Haneda)
-- YSSY (Sydney)
-- WSSS (Singapore)
-- NZAA (Auckland)
-
-### Africa/Middle East
-- FAOR (Johannesburg)
-- HECA (Cairo)
-- OMDB (Dubai)
+1. Copy `custom_components/aviation_weather` to your HA `custom_components` directory
+2. Restart Home Assistant
 
 ---
 
-## 📊 Features
+## Configuration
 
-### Core Integration
-- ✅ **18 original sensors** per aerodrome
-- ✅ **20+ parsed METAR sensors**
-- ✅ **10 parsed TAF sensors**
-- ✅ **4 formatted output sensors**
+1. Go to **Settings → Devices & Services → Add Integration**
+2. Search for **Aviation Weather**
+3. Enter one or more aerodrome ICAO codes (e.g. `EGLL`, `KJFK`, `YSSY`)
+4. Set the update interval (optional, default 30 minutes)
 
-### Data Quality
-- ✅ Clean METAR formatting (no redundant fields)
-- ✅ Professional TAF formatting
-- ✅ Automatic parsing and validation
-- ✅ Human-readable output
-
-### Dashboard
-- ✅ **Weather Reports** view
-- ✅ **Comparison** charts and tables
-- ✅ **Raw Data** display
-- ✅ **Global coordinate support** 🌍 NEW!
+To add or remove aerodromes after initial setup, remove and re-add the integration.
 
 ---
 
-## 💡 Usage
+## Sensors
 
-### Basic Sensor Access
-```yaml
-# Temperature
-{{ states('sensor.egll_metar_temperature') }}°C
+The integration creates the following sensor groups for each aerodrome:
 
-# Wind
-{{ states('sensor.egll_metar_wind_speed') }}kt from {{ states('sensor.egll_metar_wind_direction') }}°
+### Raw METAR/TAF Sensors (18 sensors)
 
-# Visibility
-{{ states('sensor.egll_metar_visibility') }}
-```
+Direct values from the Aviation Weather Center API:
 
-### Formatted Output
-```yaml
-# Readable METAR
-{{ state_attr('sensor.egll_metar_readable_text', 'formatted_output') }}
+| Sensor | Description |
+|--------|-------------|
+| `{ICAO} METAR ICAO Code` | ICAO identifier |
+| `{ICAO} METAR Report Time` | Observation report time (timestamp) |
+| `{ICAO} METAR Receipt Time` | Data receipt time (timestamp) |
+| `{ICAO} METAR Temperature` | Temperature (°C) |
+| `{ICAO} METAR Dew Point` | Dew point (°C) |
+| `{ICAO} METAR Wind Direction` | Wind direction (°) |
+| `{ICAO} METAR Wind Speed` | Wind speed (kt) |
+| `{ICAO} METAR Wind Gust` | Wind gust speed (kt) |
+| `{ICAO} METAR Visibility` | Visibility |
+| `{ICAO} METAR Altimeter` | Altimeter setting (inHg) |
+| `{ICAO} TAF Raw TAF` | Raw TAF string |
+| `{ICAO} Raw METAR` | Raw METAR string |
+| `{ICAO} Latitude` | Aerodrome latitude (°) |
+| `{ICAO} Longitude` | Aerodrome longitude (°) |
+| `{ICAO} Elevation` | Aerodrome elevation (m) |
+| `{ICAO} Aerodrome Name` | Short aerodrome name |
+| `{ICAO} Aerodrome Full Name` | Full aerodrome name |
+| `{ICAO} Country/Region` | Country or region |
 
-# Readable TAF
-{{ state_attr('sensor.egll_taf_readable_text', 'formatted_output') }}
-```
+### Parsed METAR Sensors (20+ sensors)
 
-### Location Display (NEW!)
-```yaml
-# Automatically shows correct hemisphere
-Location: {{ states('sensor.egll_latitude') | float | abs }}°{{ 'N' if states('sensor.egll_latitude') | float >= 0 else 'S' }}, {{ states('sensor.egll_longitude') | float | abs }}°{{ 'E' if states('sensor.egll_longitude') | float >= 0 else 'W' }}
-```
+Structured values extracted from parsed METAR data, including wind components, visibility, cloud layers, altimeter, sea level pressure, and observation metadata.
 
----
+### Parsed TAF Sensors (10 sensors)
 
-## 🔧 What's Included
+Structured values from parsed TAF data including validity period, amendment/correction flags, and forecast groups.
 
-### Integration Files
-```
-custom_components/aviation_weather/
-├── __init__.py (coordinator)
-├── config_flow.py (UI config)
-├── sensor.py (52+ sensors)
-├── metar_parser.py (v2.0.1)
-├── taf_parser.py (v2.0.1)
-├── manifest.json (v2.3.0) ⭐
-├── const.py
-└── strings.json
-```
+### Formatted Output Sensors (6 sensors)
 
-### Documentation
-- ✅ CHANGELOG_v2.3.0.md
-- ✅ README.md (this file)
-- ✅ DASHBOARD_EGMC_EGLL_EGSH.yaml ⭐ UPDATED
+Human-readable representations of METAR and TAF data:
 
----
+| Sensor | Description |
+|--------|-------------|
+| `{ICAO} METAR Readable (Text)` | Plain text METAR summary |
+| `{ICAO} METAR Readable (HTML)` | HTML METAR summary |
+| `{ICAO} METAR Readable (Rich HTML)` | Rich HTML METAR with styling |
+| `{ICAO} TAF Readable (Text)` | Plain text TAF summary |
+| `{ICAO} TAF Readable (HTML)` | HTML TAF summary |
+| `{ICAO} TAF Readable (Rich HTML)` | Rich HTML TAF with styling |
 
-## 📈 Version History
+The sensor state shows the character count; the full formatted output is in the `formatted_output` attribute.
 
-### v2.3.0 (2024-11-20) - Current
-- ✅ Global coordinate support
-- ✅ Automatic hemisphere detection
-
-### v2.2.0 (2024-11-20)
-- ✅ Improved METAR/TAF formatting
-- ✅ Better time period display
-- ✅ Fixed TAF station name
-
-### v2.1.0 (2024-11-20)
-- ✅ Added parser integration
-- ✅ 52+ sensors per aerodrome
-- ✅ Formatted output support
+All sensors include `last_updated` (native datetime) and `attribution` attributes.
 
 ---
 
-## 🎓 Dashboard Customization
+## Usage Examples
 
-### For Your Own Aerodromes
-
-Simply replace the aerodrome codes in the dashboard YAML:
+### Display current conditions
 
 ```yaml
-# Change from EGMC to your aerodrome
-sensor.egmc_metar_temperature  →  sensor.kjfk_metar_temperature
-sensor.egmc_latitude           →  sensor.kjfk_latitude
+type: markdown
+content: |
+  ## {{ state_attr('sensor.egll_metar_aerodrome_name', 'aerodrome') }} Weather
+  **Temp:** {{ states('sensor.egll_metar_temperature') }}°C
+  **Wind:** {{ states('sensor.egll_metar_wind_speed') }}kt
+  from {{ states('sensor.egll_metar_wind_direction') }}°
+  **Visibility:** {{ states('sensor.egll_metar_visibility') }}
 ```
 
-The coordinate display will automatically work correctly for any aerodrome worldwide!
+### Formatted METAR/TAF output
 
----
-
-## ⚡ Performance
-
-- **Update frequency**: 30 minutes (configurable)
-- **Parsing time**: ~10-50ms per aerodrome
-- **Memory usage**: ~100KB per aerodrome
-- **Network impact**: Minimal (single API call per aerodrome)
-
----
-
-## 🚀 Upgrade from v2.2.0
-
-**Simple upgrade** - just replace files:
-
-```bash
-cd /config/custom_components
-tar -xzf aviation_weather_v2.3.0.tar.gz
-cp -r aviation_weather_v2.3/custom_components/aviation_weather/* aviation_weather/
-# Restart Home Assistant
+```yaml
+type: markdown
+content: |
+  {{ state_attr('sensor.egll_formatted_metar_readable_text', 'formatted_output') }}
 ```
 
-If you're using the dashboard, update your location display templates to use the new format.
+### Location display with correct hemisphere
+
+```yaml
+type: markdown
+content: |
+  {% set lat = states('sensor.egll_latitude') | float %}
+  {% set lon = states('sensor.egll_longitude') | float %}
+  Location: {{ lat | abs }}°{{ 'N' if lat >= 0 else 'S' }},
+  {{ lon | abs }}°{{ 'E' if lon >= 0 else 'W' }}
+```
+
+This works correctly for any aerodrome worldwide — Sydney (33.9°S, 151.2°E), New York (40.6°N, 73.8°W), etc.
+
+### Low visibility alert automation
+
+```yaml
+automation:
+  - alias: "Low Visibility Alert"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.egll_metar_visibility
+        below: 1000
+    action:
+      - service: notify.mobile_app_ians_galaxy_a53
+        data:
+          title: "Low Visibility Warning"
+          message: >
+            {{ state_attr('sensor.egll_metar_aerodrome_name', 'aerodrome') }}
+            visibility is {{ states('sensor.egll_metar_visibility') }}
+```
+
+### Manual refresh service
+
+```yaml
+service: aviation_weather.refresh
+```
 
 ---
 
-## 🐛 Known Issues
+## Global Coverage
 
-### Entity Duplicates (_2 suffix)
-If you see duplicate sensors, clean them up:
-1. Settings → Devices & Services → Entities
+Works with any ICAO aerodrome code. Examples:
+
+| Region | Examples |
+|--------|---------|
+| UK/Europe | EGLL, EGCC, LFPG, EDDF, LEMD, LIRF |
+| North America | KJFK, KLAX, CYYZ, KORD |
+| Asia/Pacific | RJTT, YSSY, WSSS, NZAA |
+| Africa/Middle East | FAOR, HECA, OMDB |
+| South America | SBGR, SCEL, SAEZ |
+
+---
+
+## Supported Languages
+
+The integration UI is available in:
+
+- 🇩🇰 Danish (Dansk)
+- 🇩🇪 German (Deutsch)
+- 🇬🇧 English
+- 🇪🇸 Spanish (Español)
+- 🇫🇮 Finnish (Suomi)
+- 🇫🇷 French (Français)
+- 🇮🇹 Italian (Italiano)
+- 🇯🇵 Japanese (日本語)
+- 🇳🇱 Dutch (Nederlands)
+- 🇳🇴 Norwegian (Norsk)
+- 🇵🇱 Polish (Polski)
+- 🇵🇹 Portuguese (Português)
+- 🇸🇪 Swedish (Svenska)
+
+---
+
+## Troubleshooting
+
+### Sensors show unavailable
+- Verify the ICAO code is correct (4-letter codes like `EGLL`, not 3-letter like `LHR`)
+- Check Home Assistant logs for API errors
+- Confirm Aviation Weather Center is reachable
+
+### Entity duplicates with `_2` suffix
+If you see duplicate sensors after a reinstall:
+1. **Settings → Devices & Services → Entities**
 2. Search for your aerodrome code
-3. Delete entities with `_2` suffix
+3. Delete entities with the `_2` suffix
 4. Restart Home Assistant
 
----
-
-## 📚 Documentation Files
-
-- **CHANGELOG_v2.3.0.md** - What's new
-- **CHANGELOG_v2.2.0.md** - Previous changes
-- **DASHBOARD_EGMC_EGLL_EGSH.yaml** - Dashboard template
+### TAF sensors unavailable
+Not all aerodromes publish TAF data — smaller aerodromes may only have METAR. TAF sensors will show unavailable in this case, which is expected.
 
 ---
 
-## 🌟 Example: Using Worldwide
+## Performance
 
-### Sydney, Australia (YSSY)
-```yaml
-type: markdown
-content: |
-  ## Sydney Airport (YSSY)
-  **Location:** {{ states('sensor.yssy_latitude') | float | abs }}°{{ 'N' if states('sensor.yssy_latitude') | float >= 0 else 'S' }}, {{ states('sensor.yssy_longitude') | float | abs }}°{{ 'E' if states('sensor.yssy_longitude') | float >= 0 else 'W' }}
-  
-  {{ state_attr('sensor.yssy_metar_readable_text', 'formatted_output') }}
-```
-**Display**: Location: 33.9°S, 151.2°E ✅
-
-### New York, USA (KJFK)
-```yaml
-type: markdown
-content: |
-  ## New York JFK (KJFK)
-  **Location:** {{ states('sensor.kjfk_latitude') | float | abs }}°{{ 'N' if states('sensor.kjfk_latitude') | float >= 0 else 'S' }}, {{ states('sensor.kjfk_longitude') | float | abs }}°{{ 'E' if states('sensor.kjfk_longitude') | float >= 0 else 'W' }}
-  
-  {{ state_attr('sensor.kjfk_metar_readable_text', 'formatted_output') }}
-```
-**Display**: Location: 40.6°N, 73.8°W ✅
+| Metric | Value |
+|--------|-------|
+| Default update interval | 30 minutes |
+| Configurable range | 1–1440 minutes |
+| Parsing time | ~10–50ms per aerodrome |
+| Network | Single API call per aerodrome per update |
 
 ---
 
-## 🔮 Coming Soon
+## Version History
 
-Planned features:
-- NOTAM integration
-- Runway wind calculations
-- VFR/IFR decision support
-- Automated briefing generation
+### v2.6.0
+- Sensor quality improvements: proper `DeviceInfo`, `ATTR_ATTRIBUTION`, native datetime `last_updated` on all sensors
+- `FormattedSensor` unique ID standardised
+- Translation coverage expanded to 13 languages (DA, ES, FI, JA, NL, NO, PL, PT, SV added)
 
----
+### v2.5.0
+- Runway flyability assessment (crosswind/headwind calculations, VFR/IFR ratings)
 
-## 📞 Support
+### v2.3.0–v2.4.x
+- Global coordinate support with automatic hemisphere detection (N/S/E/W)
+- Improved METAR/TAF formatting
+- Better time period display in TAF output
 
-**Author**: Ian @ Planet Builders  
-**Email**: ian@planetbuilders.co.uk  
-**Data Source**: Aviation Weather Center (NOAA)  
-**License**: Apache 2.0  
-**Version**: 2.3.0
-
----
-
-## 🎉 Summary
-
-v2.3.0 adds global coordinate support, making the dashboard ready for use with any aerodrome worldwide. The coordinate display automatically detects and shows the correct hemisphere indicators (N/S/E/W) based on the actual coordinate values.
-
-Perfect for:
-- ✈️ Pilots tracking multiple airports
-- 🌍 Global aviation weather monitoring
-- 📊 Multi-region weather comparison
-- 🏠 Smart home aviation enthusiasts
+### v2.1.0–v2.2.0
+- Added METAR/TAF parser integration
+- 52+ sensors per aerodrome
+- Formatted text and HTML output sensors
 
 ---
 
-**Download Now**: [aviation_weather_v2.3.0.tar.gz](aviation_weather_v2.3.0.tar.gz)
+## Support
 
-**Happy flying, anywhere in the world! ✈️🌍**
+- **Issues**: [GitHub Issue Tracker](https://github.com/ianpleasance/aviation-weather-integration/issues)
+- **Author**: Ian Pleasance
+- **Data source**: [Aviation Weather Center](https://aviationweather.gov) (NOAA)
+- **License**: Apache 2.0

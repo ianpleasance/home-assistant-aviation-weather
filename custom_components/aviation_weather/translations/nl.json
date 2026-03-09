@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Vliegveld toevoegen",
+        "description": "Voer een ICAO-code in van een vliegveld (bijv. EHAM, EHRD)\n\nAl toegevoegde vliegvelden: {aerodromes_added}",
+        "data": {
+          "aerodromes": "ICAO-code vliegveld"
+        }
+      },
+      "scan_interval": {
+        "title": "Updateinterval instellen",
+        "description": "Geconfigureerde vliegvelden: {aerodromes}\n\nStel in hoe vaak weergegevens worden opgehaald (in minuten).",
+        "data": {
+          "scan_interval": "Updateinterval (minuten)",
+          "action": "Volgende actie"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kan geen verbinding maken met Aviation Weather Center of vliegveld niet gevonden",
+      "invalid_aerodrome_format": "Vliegveldcode moet 3-5 tekens zijn",
+      "invalid_scan_interval": "Updateinterval moet tussen 1 en 1440 minuten (24 uur) zijn",
+      "unknown": "Onverwachte fout opgetreden"
+    },
+    "abort": {
+      "already_configured": "Dit vliegveld is al geconfigureerd"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Vliegveld-opties",
+        "description": "Geconfigureerde vliegvelden: {aerodromes}\n\nOpmerking: Om vliegvelden toe te voegen of te verwijderen, moet u deze integratie verwijderen en opnieuw toevoegen.",
+        "data": {
+          "scan_interval": "Updateinterval (minuten)"
+        }
+      }
+    },
+    "error": {
+      "invalid_scan_interval": "Updateinterval moet tussen 1 en 1440 minuten (24 uur) zijn"
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Luchtvaartweersgegevens vernieuwen",
+      "description": "Forceer een onmiddellijke vernieuwing van METAR- en TAF-gegevens voor alle geconfigureerde vliegvelden"
+    }
+  }
+}

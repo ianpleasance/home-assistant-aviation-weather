@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tilføj flyveplads",
+        "description": "Indtast en flyveplads ICAO-kode (f.eks. EKCH, EKBI)\n\nAllerede tilføjede flyvepladser: {aerodromes_added}",
+        "data": {
+          "aerodromes": "Flyveplads ICAO-kode"
+        }
+      },
+      "scan_interval": {
+        "title": "Konfigurer opdateringsinterval",
+        "description": "Konfigurerede flyvepladser: {aerodromes}\n\nAngiv, hvor ofte vejrdata hentes (i minutter).",
+        "data": {
+          "scan_interval": "Opdateringsinterval (minutter)",
+          "action": "Næste handling"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kunne ikke oprette forbindelse til Aviation Weather Center eller flyveplads ikke fundet",
+      "invalid_aerodrome_format": "Flyveplads-kode skal være 3-5 tegn",
+      "invalid_scan_interval": "Opdateringsinterval skal være mellem 1 og 1440 minutter (24 timer)",
+      "unknown": "Uventet fejl opstod"
+    },
+    "abort": {
+      "already_configured": "Denne flyveplads er allerede konfigureret"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Flyveplads-indstillinger",
+        "description": "Konfigurerede flyvepladser: {aerodromes}\n\nBemærk: For at tilføje eller fjerne flyvepladser skal du fjerne og geninstallere integrationen.",
+        "data": {
+          "scan_interval": "Opdateringsinterval (minutter)"
+        }
+      }
+    },
+    "error": {
+      "invalid_scan_interval": "Opdateringsinterval skal være mellem 1 og 1440 minutter (24 timer)"
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Opdater flyvevejrdata",
+      "description": "Tving en øjeblikkelig opdatering af METAR- og TAF-data for alle konfigurerede flyvepladser"
+    }
+  }
+}

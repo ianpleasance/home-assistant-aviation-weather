@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Lisää lentokenttä",
+        "description": "Syötä lentokentän ICAO-koodi (esim. EFHK, EFTU)\n\nJo lisätyt lentokentät: {aerodromes_added}",
+        "data": {
+          "aerodromes": "Lentokentän ICAO-koodi"
+        }
+      },
+      "scan_interval": {
+        "title": "Määritä päivitysväli",
+        "description": "Määritetyt lentokentät: {aerodromes}\n\nAseta kuinka usein säätiedot haetaan (minuuteissa).",
+        "data": {
+          "scan_interval": "Päivitysväli (minuuttia)",
+          "action": "Seuraava toiminto"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Yhteys Aviation Weather Centeriin epäonnistui tai lentokenttää ei löydy",
+      "invalid_aerodrome_format": "Lentokentän koodin tulee olla 3–5 merkkiä",
+      "invalid_scan_interval": "Päivitysvälin on oltava 1–1440 minuuttia (24 tuntia)",
+      "unknown": "Odottamaton virhe tapahtui"
+    },
+    "abort": {
+      "already_configured": "Tämä lentokenttä on jo määritetty"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Lentokenttäasetukset",
+        "description": "Määritetyt lentokentät: {aerodromes}\n\nHuom: Lentokenttien lisääminen tai poistaminen vaatii integraation poistamisen ja uudelleenlisäämisen.",
+        "data": {
+          "scan_interval": "Päivitysväli (minuuttia)"
+        }
+      }
+    },
+    "error": {
+      "invalid_scan_interval": "Päivitysvälin on oltava 1–1440 minuuttia (24 tuntia)"
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Päivitä lentosäätiedot",
+      "description": "Pakota välitön METAR- ja TAF-tietojen päivitys kaikille määritetyille lentokentille"
+    }
+  }
+}

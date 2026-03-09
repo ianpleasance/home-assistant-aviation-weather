@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "飛行場の追加",
+        "description": "飛行場のICAOコードを入力してください（例：RJTT、RJOO）\n\n追加済みの飛行場：{aerodromes_added}",
+        "data": {
+          "aerodromes": "飛行場ICAOコード"
+        }
+      },
+      "scan_interval": {
+        "title": "更新間隔の設定",
+        "description": "設定済みの飛行場：{aerodromes}\n\n気象データの取得頻度を設定してください（分単位）。",
+        "data": {
+          "scan_interval": "更新間隔（分）",
+          "action": "次のアクション"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Aviation Weather Centerへの接続に失敗したか、飛行場が見つかりません",
+      "invalid_aerodrome_format": "飛行場コードは3〜5文字である必要があります",
+      "invalid_scan_interval": "更新間隔は1〜1440分（24時間）の範囲で設定してください",
+      "unknown": "予期しないエラーが発生しました"
+    },
+    "abort": {
+      "already_configured": "この飛行場はすでに設定されています"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "飛行場オプション",
+        "description": "設定済みの飛行場：{aerodromes}\n\n注意：飛行場の追加・削除はインテグレーションを削除して再追加する必要があります。",
+        "data": {
+          "scan_interval": "更新間隔（分）"
+        }
+      }
+    },
+    "error": {
+      "invalid_scan_interval": "更新間隔は1〜1440分（24時間）の範囲で設定してください"
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "航空気象データを更新",
+      "description": "設定済みの全飛行場のMETARおよびTAFデータを即時更新します"
+    }
+  }
+}

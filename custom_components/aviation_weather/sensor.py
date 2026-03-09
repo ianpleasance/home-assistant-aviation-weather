@@ -1,15 +1,17 @@
 """Sensor platform for Aviation Weather integration."""
 from __future__ import annotations
 
-from datetime import datetime
 import logging
 from typing import Any
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import ATTR_ATTRIBUTION
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util import dt as dt_util
 
 from . import AviationWeatherDataUpdateCoordinator
 from .const import DOMAIN
@@ -17,6 +19,8 @@ from .metar_parser import parse_metar, format_metar
 from .taf_parser import parse_taf, format_taf
 
 _LOGGER = logging.getLogger(__name__)
+
+_ATTRIBUTION = "Data provided by Aviation Weather Center"
 
 
 # Define the sensor types with their properties
@@ -503,12 +507,13 @@ class AviationWeatherSensor(CoordinatorEntity, SensorEntity):
             self._attr_state_class = sensor_config["state_class"]
         
         # Set device info for grouping
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, aerodrome)},
-            "name": f"Aviation Weather {aerodrome}",
-            "manufacturer": "Aviation Weather Center",
-            "model": "METAR/TAF",
-        }
+        self._attr_device_info = DeviceInfo(
+            entry_type=DeviceEntryType.SERVICE,
+            identifiers={(DOMAIN, aerodrome)},
+            name=f"Aviation Weather {aerodrome}",
+            manufacturer="Aviation Weather Center",
+            model="METAR/TAF",
+        )
 
 
     @property
@@ -549,8 +554,7 @@ class AviationWeatherSensor(CoordinatorEntity, SensorEntity):
         # Handle timestamp conversion for time fields
         if self._sensor_key in ("reportTime", "receiptTime") and value:
             try:
-                # Convert ISO format timestamp to datetime
-                return datetime.fromisoformat(value.replace('Z', '+00:00'))
+                return dt_util.parse_datetime(value.replace('Z', '+00:00'))
             except (ValueError, AttributeError):
                 return value
         
@@ -591,8 +595,10 @@ class AviationWeatherSensor(CoordinatorEntity, SensorEntity):
             return {}
         
         attributes = {
+            ATTR_ATTRIBUTION: _ATTRIBUTION,
             "aerodrome": self._aerodrome,
-            "data_source": "Aviation Weather Center"
+            "data_source": "Aviation Weather Center",
+            "last_updated": dt_util.now(),
         }
         
         # Add raw METAR to all sensors for reference
@@ -660,12 +666,13 @@ class ParsedMetarSensor(CoordinatorEntity, SensorEntity):
             self._attr_state_class = sensor_config["state_class"]
         
         # Set device info for grouping
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, aerodrome)},
-            "name": f"Aviation Weather {aerodrome}",
-            "manufacturer": "Aviation Weather Center",
-            "model": "METAR/TAF",
-        }
+        self._attr_device_info = DeviceInfo(
+            entry_type=DeviceEntryType.SERVICE,
+            identifiers={(DOMAIN, aerodrome)},
+            name=f"Aviation Weather {aerodrome}",
+            manufacturer="Aviation Weather Center",
+            model="METAR/TAF",
+        )
 
     @property
     def native_value(self) -> Any:
@@ -697,8 +704,10 @@ class ParsedMetarSensor(CoordinatorEntity, SensorEntity):
             return {}
         
         attributes = {
+            ATTR_ATTRIBUTION: _ATTRIBUTION,
             "aerodrome": self._aerodrome,
-            "data_source": "Parsed METAR"
+            "data_source": "Parsed METAR",
+            "last_updated": dt_util.now(),
         }
         
         # Add raw METAR
@@ -766,12 +775,13 @@ class ParsedTafSensor(CoordinatorEntity, SensorEntity):
             self._attr_state_class = sensor_config["state_class"]
         
         # Set device info for grouping
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, aerodrome)},
-            "name": f"Aviation Weather {aerodrome}",
-            "manufacturer": "Aviation Weather Center",
-            "model": "METAR/TAF",
-        }
+        self._attr_device_info = DeviceInfo(
+            entry_type=DeviceEntryType.SERVICE,
+            identifiers={(DOMAIN, aerodrome)},
+            name=f"Aviation Weather {aerodrome}",
+            manufacturer="Aviation Weather Center",
+            model="METAR/TAF",
+        )
 
     @property
     def native_value(self) -> Any:
@@ -803,8 +813,10 @@ class ParsedTafSensor(CoordinatorEntity, SensorEntity):
             return {}
         
         attributes = {
+            ATTR_ATTRIBUTION: _ATTRIBUTION,
             "aerodrome": self._aerodrome,
-            "data_source": "Parsed TAF"
+            "data_source": "Parsed TAF",
+            "last_updated": dt_util.now(),
         }
         
         # Add raw TAF
@@ -853,25 +865,26 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
         self._sensor_key = sensor_key
         self._sensor_config = sensor_config
         
-        # Set unique ID
-        self._attr_unique_id = f"{DOMAIN}_{aerodrome.lower()}_{sensor_key}"
-        
+        # Set unique ID - use formatted_ prefix for consistency
+        self._attr_unique_id = f"{DOMAIN}_{aerodrome.lower()}_formatted_{sensor_key}"
+
         # Set entity name
         self._attr_name = f"{aerodrome} {sensor_config['name']}"
-        
+
         # Set icon
         self._attr_icon = sensor_config.get("icon")
-        
+
         # Set unit of measurement
         self._attr_native_unit_of_measurement = sensor_config.get("unit")
-        
+
         # Set device info for grouping
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, aerodrome)},
-            "name": f"Aviation Weather {aerodrome}",
-            "manufacturer": "Aviation Weather Center",
-            "model": "METAR/TAF",
-        }
+        self._attr_device_info = DeviceInfo(
+            entry_type=DeviceEntryType.SERVICE,
+            identifiers={(DOMAIN, aerodrome)},
+            name=f"Aviation Weather {aerodrome}",
+            manufacturer="Aviation Weather Center",
+            model="METAR/TAF",
+        )
 
     @property
     def native_value(self) -> Any:
@@ -966,8 +979,10 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
             return {}
         
         attributes = {
+            ATTR_ATTRIBUTION: _ATTRIBUTION,
             "aerodrome": self._aerodrome,
-            "data_source": "Formatted Output"
+            "data_source": "Formatted Output",
+            "last_updated": dt_util.now(),
         }
         
         data_type = self._sensor_config.get("data_type")

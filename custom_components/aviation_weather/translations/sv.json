@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Lägg till flygplats",
+        "description": "Ange en ICAO-kod för flygplats (t.ex. ESSA, ESGG)\n\nRedan tillagda flygplatser: {aerodromes_added}",
+        "data": {
+          "aerodromes": "Flygplats ICAO-kod"
+        }
+      },
+      "scan_interval": {
+        "title": "Konfigurera uppdateringsintervall",
+        "description": "Konfigurerade flygplatser: {aerodromes}\n\nAnge hur ofta väderdata ska hämtas (i minuter).",
+        "data": {
+          "scan_interval": "Uppdateringsintervall (minuter)",
+          "action": "Nästa åtgärd"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kunde inte ansluta till Aviation Weather Center eller flygplatsen hittades inte",
+      "invalid_aerodrome_format": "Flygplatskod måste vara 3-5 tecken",
+      "invalid_scan_interval": "Uppdateringsintervallet måste vara mellan 1 och 1440 minuter (24 timmar)",
+      "unknown": "Ett oväntat fel inträffade"
+    },
+    "abort": {
+      "already_configured": "Denna flygplats är redan konfigurerad"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Flygplatsalternativ",
+        "description": "Konfigurerade flygplatser: {aerodromes}\n\nObs! För att lägga till eller ta bort flygplatser måste du ta bort och lägga till integrationen igen.",
+        "data": {
+          "scan_interval": "Uppdateringsintervall (minuter)"
+        }
+      }
+    },
+    "error": {
+      "invalid_scan_interval": "Uppdateringsintervallet måste vara mellan 1 och 1440 minuter (24 timmar)"
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Uppdatera luftfartsväderdata",
+      "description": "Tvinga en omedelbar uppdatering av METAR- och TAF-data för alla konfigurerade flygplatser"
+    }
+  }
+}

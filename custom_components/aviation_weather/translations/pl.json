@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Dodaj lotnisko",
+        "description": "Wprowadź kod ICAO lotniska (np. EPWA, EPKK)\n\nJuż dodane lotniska: {aerodromes_added}",
+        "data": {
+          "aerodromes": "Kod ICAO lotniska"
+        }
+      },
+      "scan_interval": {
+        "title": "Skonfiguruj interwał aktualizacji",
+        "description": "Skonfigurowane lotniska: {aerodromes}\n\nUstaw, jak często mają być pobierane dane pogodowe (w minutach).",
+        "data": {
+          "scan_interval": "Interwał aktualizacji (minuty)",
+          "action": "Następna akcja"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nie można połączyć się z Aviation Weather Center lub nie znaleziono lotniska",
+      "invalid_aerodrome_format": "Kod lotniska musi mieć od 3 do 5 znaków",
+      "invalid_scan_interval": "Interwał aktualizacji musi wynosić od 1 do 1440 minut (24 godziny)",
+      "unknown": "Wystąpił nieoczekiwany błąd"
+    },
+    "abort": {
+      "already_configured": "To lotnisko jest już skonfigurowane"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opcje lotniska",
+        "description": "Skonfigurowane lotniska: {aerodromes}\n\nUwaga: Aby dodać lub usunąć lotniska, należy usunąć i ponownie dodać tę integrację.",
+        "data": {
+          "scan_interval": "Interwał aktualizacji (minuty)"
+        }
+      }
+    },
+    "error": {
+      "invalid_scan_interval": "Interwał aktualizacji musi wynosić od 1 do 1440 minut (24 godziny)"
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Odśwież dane meteorologiczne lotnictwa",
+      "description": "Wymuś natychmiastowe odświeżenie danych METAR i TAF dla wszystkich skonfigurowanych lotnisk"
+    }
+  }
+}

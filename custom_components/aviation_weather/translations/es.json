@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Agregar aeródromo",
+        "description": "Introduzca un código ICAO de aeródromo (p. ej., LEMD, LEBL)\n\nAeródromos ya añadidos: {aerodromes_added}",
+        "data": {
+          "aerodromes": "Código ICAO del aeródromo"
+        }
+      },
+      "scan_interval": {
+        "title": "Configurar intervalo de actualización",
+        "description": "Aeródromos configurados: {aerodromes}\n\nEstablezca la frecuencia de obtención de datos meteorológicos (en minutos).",
+        "data": {
+          "scan_interval": "Intervalo de actualización (minutos)",
+          "action": "Siguiente acción"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "No se pudo conectar a Aviation Weather Center o aeródromo no encontrado",
+      "invalid_aerodrome_format": "El código de aeródromo debe tener entre 3 y 5 caracteres",
+      "invalid_scan_interval": "El intervalo de actualización debe estar entre 1 y 1440 minutos (24 horas)",
+      "unknown": "Error inesperado"
+    },
+    "abort": {
+      "already_configured": "Este aeródromo ya está configurado"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones de aeródromo",
+        "description": "Aeródromos configurados: {aerodromes}\n\nNota: Para agregar o eliminar aeródromos, debe eliminar y volver a agregar esta integración.",
+        "data": {
+          "scan_interval": "Intervalo de actualización (minutos)"
+        }
+      }
+    },
+    "error": {
+      "invalid_scan_interval": "El intervalo de actualización debe estar entre 1 y 1440 minutos (24 horas)"
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Actualizar datos meteorológicos de aviación",
+      "description": "Forzar una actualización inmediata de datos METAR y TAF para todos los aeródromos configurados"
+    }
+  }
+}

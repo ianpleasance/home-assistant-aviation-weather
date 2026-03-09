@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Legg til flyplass",
+        "description": "Skriv inn en ICAO-kode for flyplass (f.eks. ENGM, ENBR)\n\nAllerede lagt til flyplasser: {aerodromes_added}",
+        "data": {
+          "aerodromes": "Flyplass ICAO-kode"
+        }
+      },
+      "scan_interval": {
+        "title": "Konfigurer oppdateringsintervall",
+        "description": "Konfigurerte flyplasser: {aerodromes}\n\nAngi hvor ofte værdataene skal hentes (i minutter).",
+        "data": {
+          "scan_interval": "Oppdateringsintervall (minutter)",
+          "action": "Neste handling"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kunne ikke koble til Aviation Weather Center eller flyplass ikke funnet",
+      "invalid_aerodrome_format": "Flyplasskode må være 3-5 tegn",
+      "invalid_scan_interval": "Oppdateringsintervall må være mellom 1 og 1440 minutter (24 timer)",
+      "unknown": "En uventet feil oppstod"
+    },
+    "abort": {
+      "already_configured": "Denne flyplassen er allerede konfigurert"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Flyplassalternativer",
+        "description": "Konfigurerte flyplasser: {aerodromes}\n\nMerk: For å legge til eller fjerne flyplasser må du fjerne og legge til integrasjonen på nytt.",
+        "data": {
+          "scan_interval": "Oppdateringsintervall (minutter)"
+        }
+      }
+    },
+    "error": {
+      "invalid_scan_interval": "Oppdateringsintervall må være mellom 1 og 1440 minutter (24 timer)"
+    }
+  },
+  "services": {
+    "refresh": {
+      "name": "Oppdater luftfartsværdata",
+      "description": "Tving en umiddelbar oppdatering av METAR- og TAF-data for alle konfigurerte flyplasser"
+    }
+  }
+}
