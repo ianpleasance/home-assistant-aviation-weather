@@ -1,7 +1,7 @@
 # Aviation Weather Integration for Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
-[![version](https://img.shields.io/badge/version-2.6.0-blue.svg)](https://github.com/ianpleasance/aviation-weather-integration)
+[![version](https://img.shields.io/badge/version-2.6.0-blue.svg)](https://github.com/ianpleasance/home-assistant-aviation-weather)
 
 A custom Home Assistant integration that fetches live METAR and TAF data from the Aviation Weather Center (NOAA) for any aerodrome worldwide, creating 52+ sensors per aerodrome with parsed and formatted weather output.
 
@@ -27,7 +27,7 @@ A custom Home Assistant integration that fetches live METAR and TAF data from th
 1. Open HACS in your Home Assistant instance
 2. Click **Integrations**
 3. Click the three dots → **Custom repositories**
-4. Add: `https://github.com/ianpleasance/aviation-weather-integration`
+4. Add: `https://github.com/ianpleasance/home-assistant-aviation-weather`
 5. Category: **Integration**
 6. Search for **Aviation Weather** and click **Download**
 7. Restart Home Assistant
@@ -255,7 +255,7 @@ Not all aerodromes publish TAF data — smaller aerodromes may only have METAR. 
 
 ## Support
 
-- **Issues**: [GitHub Issue Tracker](https://github.com/ianpleasance/aviation-weather-integration/issues)
+- **Issues**: [GitHub Issue Tracker](https://github.com/ianpleasance/home-assistant-aviation-weather/issues)
 - **Author**: Ian Pleasance
 - **Data source**: [Aviation Weather Center](https://aviationweather.gov) (NOAA)
 - **License**: Apache 2.0

@@ -59,14 +59,14 @@ Forces immediate data refresh for all aerodromes.
 
 ## Documentation
 
-- [Installation Guide](https://github.com/ianpleasance/aviation-weather-integration/blob/main/INSTALL.md)
-- [Full README](https://github.com/ianpleasance/aviation-weather-integration/blob/main/README.md)
-- [Upgrade Guide](https://github.com/ianpleasance/aviation-weather-integration/blob/main/UPGRADE_GUIDE.md)
+- [Installation Guide](https://github.com/ianpleasance/home-assistant-aviation-weather/blob/main/INSTALL.md)
+- [Full README](https://github.com/ianpleasance/home-assistant-aviation-weather/blob/main/README.md)
+- [Upgrade Guide](https://github.com/ianpleasance/home-assistant-aviation-weather/blob/main/UPGRADE_GUIDE.md)
 
 ## Support
 
-- [GitHub Issues](https://github.com/ianpleasance/aviation-weather-integration/issues)
-- [GitHub Discussions](https://github.com/ianpleasance/aviation-weather-integration/discussions)
+- [GitHub Issues](https://github.com/ianpleasance/home-assistant-aviation-weather/issues)
+- [GitHub Discussions](https://github.com/ianpleasance/home-assistant-aviation-weather/discussions)
 
 ---
 

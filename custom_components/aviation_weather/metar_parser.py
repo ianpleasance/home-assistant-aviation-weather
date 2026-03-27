@@ -42,7 +42,13 @@ def parse_metar(metar: str) -> Dict[str, Any]:
     
     if not metar or not isinstance(metar, str):
         return parsed
-    
+
+    # Strip leading report type prefix (e.g. "METAR " or "SPECI ") so the
+    # station ID regex always sees the 4-letter ICAO code first.  Without this,
+    # a string like "METAR EGLL ..." causes the regex to capture "META" instead
+    # of the actual station identifier.
+    metar = re.sub(r'^(METAR|SPECI)\s+', '', metar.strip())
+
     try:
         # Station ID
         station_match = re.match(r'^([A-Z]{4})', metar)
