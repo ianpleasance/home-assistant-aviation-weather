@@ -64,7 +64,10 @@ SENSOR_TYPES = {
         "name": "Wind Direction",
         "icon": "mdi:compass",
         "unit": "°",
-        "state_class": "measurement",
+        # NOTE: state_class intentionally omitted. METAR wind direction can
+        # legitimately be the string "VRB" (variable) rather than a numeric
+        # bearing, and state_class="measurement" forces HA to require a
+        # number, which crashes when a station reports variable wind.
         "data_type": "metar",
     },
     "wspd": {
@@ -531,6 +534,13 @@ class AviationWeatherSensor(CoordinatorEntity, SensorEntity):
         
         # Get value from API data first
         value = aerodrome_data.get(source_field)
+
+        # Wind direction can legitimately be "VRB" (variable) rather than a
+        # numeric bearing. Without a state_class this wouldn't crash, but we
+        # still normalise it to None here so the state itself stays clean;
+        # the raw "VRB" value is preserved in extra_state_attributes below.
+        if self._sensor_key == "wdir" and value == "VRB":
+            value = None
         
         # Special handling for rawTaf - ensure we get it even if it's not in the expected format
         if value is None and self._sensor_key == "rawTaf" and "rawTaf" in aerodrome_data:
@@ -616,6 +626,14 @@ class AviationWeatherSensor(CoordinatorEntity, SensorEntity):
             attributes["full_text"] = full_text
             attributes["text_length"] = len(full_text)
             attributes["is_truncated"] = len(full_text) > 250
+
+        # Preserve "VRB" (variable wind) even though native_value returns
+        # None for it, so the raw value isn't lost.
+        if self._sensor_key == "wdir":
+            raw_wdir = aerodrome_data.get("wdir")
+            if raw_wdir is not None:
+                attributes["raw_wind_direction"] = raw_wdir
+                attributes["wind_variable"] = raw_wdir == "VRB"
         
         return attributes
 
@@ -689,9 +707,19 @@ class ParsedMetarSensor(CoordinatorEntity, SensorEntity):
         # Handle nested fields (e.g., "wind.direction")
         source_field = self._sensor_config.get("source_field", self._sensor_key)
         if "." in source_field:
-            return _get_nested_value(parsed_metar, source_field)
-        
-        return parsed_metar.get(self._sensor_key)
+            value = _get_nested_value(parsed_metar, source_field)
+        else:
+            value = parsed_metar.get(self._sensor_key)
+
+        # Wind direction can legitimately be "VRB" (variable) rather than a
+        # numeric bearing - same issue as the raw wdir sensor above, just
+        # reached via the parsed METAR data instead of the raw API field.
+        # Normalise to None so unit_of_measurement="°" numeric validation
+        # doesn't crash; the raw value is preserved in extra_state_attributes.
+        if self._sensor_key == "wind_direction" and value == "VRB":
+            value = None
+
+        return value
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
@@ -720,6 +748,10 @@ class ParsedMetarSensor(CoordinatorEntity, SensorEntity):
             
             if self._sensor_key == "wind_direction" and "wind" in parsed:
                 attributes["wind_full"] = parsed["wind"]
+                raw_wind_direction = _get_nested_value(parsed, "wind.direction")
+                if raw_wind_direction is not None:
+                    attributes["raw_wind_direction"] = raw_wind_direction
+                    attributes["wind_variable"] = raw_wind_direction == "VRB"
             elif self._sensor_key == "visibility" and "weather" in parsed:
                 attributes["weather_phenomena"] = parsed.get("weather", [])
             elif self._sensor_key == "cavok" and "clouds" in parsed:
@@ -1060,3 +1092,4 @@ class FormattedSensor(CoordinatorEntity, SensorEntity):
             self.coordinator.last_update_success
             and self._aerodrome in self.coordinator.data
         )
+
