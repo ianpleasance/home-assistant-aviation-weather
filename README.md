@@ -1,7 +1,7 @@
 # Aviation Weather Integration for Home Assistant
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
-[![version](https://img.shields.io/badge/version-2.6.0-blue.svg)](https://github.com/ianpleasance/home-assistant-aviation-weather)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![version](https://img.shields.io/github/v/release/ianpleasance/home-assistant-aviation-weather?display_name=tag&sort=semver&color=blue&label=version)](https://github.com/ianpleasance/home-assistant-aviation-weather/releases/latest)
 
 A custom Home Assistant integration that fetches live METAR and TAF data from the Aviation Weather Center (NOAA) for any aerodrome worldwide, creating 52+ sensors per aerodrome with parsed and formatted weather output.
 
